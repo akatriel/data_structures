@@ -1,17 +1,17 @@
 def treeHeight n, nodes
-	root = nodes.find_index -1
-	# construct tree then find depth
-	#tree[0] = root, [children]
-	nodes = nodes.map.with_index.to_a
-	# constructs an array [[4, 0], [-1, 1], [4, 2], [1, 3], [1, 4]]
-
-	tree = [[]] #initialize tree
-
-	tree[0].push root #move root to treeHeighte and remove from nodes?
-	nodes[root] = nil
-
-
-	nodes
+	nodes = nodes.map.with_index.to_a.sort
+	# constructs an array [[-1, 1], [1, 3], [1, 4], [4, 0], [4, 2]]
+	treeHeight = 0
+	previousNode = 0
+	nodes.each_with_index do |node, i|
+		if node[0] == -1 and treeHeight == 0
+			treeHeight += 1
+		elsif treeHeight > 0 and node[0] != nodes[i - 1][0]
+			treeHeight += 1
+			previousNode = node[0]
+		end
+	end
+	treeHeight
 end
 
 n = gets.chomp.to_i
