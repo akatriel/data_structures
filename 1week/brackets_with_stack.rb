@@ -1,5 +1,5 @@
 def matching_brackets(str)
-	brackets =  {'[' => ']', '{' => '}', '(' => ')'}
+	brackets = {'[' => ']', '{' => '}', '(' => ')'}
 	lefts = brackets.keys
 	rights = brackets.values
 	stack = []
