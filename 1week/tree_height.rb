@@ -12,7 +12,6 @@ def treeHeight n, nodes
 
 			treeHeight += 1
 		end
-	p node
 	end
 	treeHeight
 end
