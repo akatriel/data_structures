@@ -1,20 +1,153 @@
-def treeHeight n, nodes
-	nodes = nodes.map.with_index.to_a.sort
-	# constructs an array [[-1, 1], [1, 3], [1, 4], [4, 0], [4, 2]]
-	treeHeight = 0
-	nodes.each_with_index do |node, i|
+RubyVM::InstructionSequence.compile_option = {
+  tailcall_optimization: true,
+  trace_instruction: false
+}
 
-		if node[0] == -1 and treeHeight == 0
+# class Stack
+#   def initialize(size)
+#     @size = size
+#     @store = Array.new(@size)
+#     @top = -1
+#   end
+  
+#   def pop
+#     if empty?
+#       nil
+#     else
+#       popped = @store[@top]
+#       @store[@top] = nil
+#       @top = @top.pred
+#       popped
+#     end
+#   end
+  
+#   def push(element)
+#     if full? or element.nil?
+#       nil
+#     else
+#       @top = @top.succ
+#       @store[@top] = element
+#       self
+#     end
+#   end
+  
+#   def size
+#     @size
+#   end
+  
+#   def look
+#     @store[@top]
+#   end
+  
+#   private
+  
+#   def full?
+#     @top == (@size - 1)
+#   end
+  
+#   def empty?
+#     @top == -1
+#   end
+# end
 
-			treeHeight += 1
+class TreeNode
+	attr_accessor :children, :value
 
-		elsif treeHeight > 0 and node[0] != nodes[i - 1][0] and i != nodes[i - 1][0]
+	def initialize(v)
+		@value = v
+		@children = []
+	end
 
-			treeHeight += 1
+	def add_child child
+		@children << child
+	end
+end
+
+class Tree
+	attr_accessor :tree_nodes, :height, :root_node
+
+	def initialize nodes
+		@tree_nodes = []
+		@root_node = nil
+		build_tree nodes
+		@height = get_height @root_node
+	end
+
+	def get_height root
+		return 0 if root.nil? 
+		h = 0
+		# root.children.each do |child|
+		# 	h = [get_height(@tree_nodes[child]), h].max
+		# end
+
+		root.children.each{|child| h = [get_height(@tree_nodes[child]), h].max }
+		return h + 1
+	end
+
+
+	# def get_height root
+	# 	stack = [root]
+	# 	while !stack.empty?
+	# 	  current_params = stack.delete_at(0)
+	# 	  unless(current_params.nil?)
+	# 	    stack << update_params(current_params)
+	# 	  end
+	# 	end
+	# end
+
+	def build_tree nodes
+		nodes.each_with_index do |parent, i| 
+			@tree_nodes[i] = TreeNode.new i
+			if parent == -1
+				@root_node = @tree_nodes[i]
+			end
+		end
+		nodes.each_with_index do |parent_node, tree_node_index|
+			if @tree_nodes[tree_node_index] == root_node
+				next
+			else
+				@tree_nodes[parent_node].add_child tree_node_index
+			end
 		end
 	end
-	treeHeight
 end
+
+
+
+
+# class Tre
+# 	attr_accessor :a, :b
+# 	def initialize nodes
+# 		@a = nodes
+# 		@b = []
+# 		0...a.size.times{|i| @b[i] = -1}
+# 	end
+
+# 	def get_height
+# 		i = -1
+# 		j = -1
+# 		0...@a.size.times do |i|
+# 			level i
+# 		end
+
+# 		0...@a.size.times do |i|
+# 			j = [@b[i], j].max
+# 		end
+# 		j + 1
+# 	end
+
+# 	def level i
+# 		if @a[i] == -1
+# 			@b[i] = 0 
+# 		elsif(@b[@a[i]] != -1)
+# 			@b[i]= @b[@a[i]] + 1
+# 		else
+# 			level(@a[i])
+# 			@b[i] = @b[@a[i]] + 1
+# 		end
+# 	end
+# end
+
 
 
 input = []
@@ -25,4 +158,10 @@ end
 
 n = input[0]
 nodes = input[1]
-p treeHeight n, nodes
+tree = Tree.new nodes
+# p tree.height
+p tree.get_height nodes
+
+
+
+
